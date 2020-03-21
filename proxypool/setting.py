@@ -53,14 +53,14 @@ CYCLE_TESTER = env.int('CYCLE_TESTER', 20)
 CYCLE_GETTER = env.int('CYCLE_GETTER', 100)
 
 # definition of tester
-TEST_URL = env.str('TEST_URL', 'http://www.baidu.com')
+TEST_URL = env.str('TEST_URL', 'https://hq.sinajs.cn/list=v')
 TEST_TIMEOUT = env.int('TEST_TIMEOUT', 10)
 TEST_BATCH = env.int('TEST_BATCH', 20)
 # TEST_HEADERS = env.json('TEST_HEADERS', {
 #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36',
 # })
 TEST_VALID_STATUS = env.list('TEST_VALID_STATUS', [200, 206, 302])
-
+TEST_VALID_HEAD = env.str('TEST_VALID_HEAD', 'var hq_str_')
 # definition of api
 API_HOST = env.str('API_HOST', '0.0.0.0')
 API_PORT = env.int('API_PORT', 5555)

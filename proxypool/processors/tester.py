@@ -3,7 +3,7 @@ import aiohttp
 from loguru import logger
 from proxypool.schemas import Proxy
 from proxypool.storages.redis import RedisClient
-from proxypool.setting import TEST_TIMEOUT, TEST_BATCH, TEST_URL, TEST_VALID_STATUS
+from proxypool.setting import TEST_TIMEOUT, TEST_BATCH, TEST_URL, TEST_VALID_STATUS,TEST_VALID_HEAD
 from aiohttp import ClientProxyConnectionError, ServerDisconnectedError, ClientOSError, ClientHttpProxyError
 from asyncio import TimeoutError
 
@@ -41,9 +41,15 @@ class Tester(object):
                 logger.debug(f'testing {proxy.string()}')
                 async with session.get(TEST_URL, proxy=f'http://{proxy.string()}', timeout=TEST_TIMEOUT,
                                        allow_redirects=False) as response:
+                    txt = await response.text()     
                     if response.status in TEST_VALID_STATUS:
-                        self.redis.max(proxy)
-                        logger.debug(f'proxy {proxy.string()} is valid, set max score')
+                        if txt.startswith(TEST_VALID_HEAD):
+                            self.redis.max(proxy)
+                            logger.debug(f'proxy {proxy.string()} is valid, set max score')
+                        else:
+                            self.redis.decrease(proxy)
+                            logger.debug(f'proxy {proxy.string()} is invalid, decrease score')
+   
                     else:
                         self.redis.decrease(proxy)
                         logger.debug(f'proxy {proxy.string()} is invalid, decrease score')

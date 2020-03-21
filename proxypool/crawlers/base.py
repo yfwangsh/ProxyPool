@@ -1,7 +1,7 @@
 from retrying import retry
 import requests
 from loguru import logger
-
+import time
 
 class BaseCrawler(object):
     urls = []
@@ -22,6 +22,7 @@ class BaseCrawler(object):
         """
         for url in self.urls:
             logger.info(f'fetching {url}')
+            time.sleep(1) #some sites may have protection(e.g. kuaidaili)
             html = self.fetch(url)
             for proxy in self.parse(html):
                 logger.info(f'fetched proxy {proxy.string()} from {url}')
